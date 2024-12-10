@@ -4,9 +4,9 @@
 
 ## SETTING UP ENVIRONMENT
 
-`python3 -m venv myenv`
-`myenv\Scripts\activate`
-`pip install pyautogui pytesseract pillow mss opencv-python opencv-python-headless`
+- `python3 -m venv myenv`
+- `myenv\Scripts\activate`
+- `pip install pyautogui pytesseract pillow mss opencv-python opencv-python-headless`
 
 ## INSTALLING TESSEACT
 
@@ -14,4 +14,4 @@
 
 ## RUNNING THE SCRIPT
 
-python script.py
+`python script.py`

@@ -8,6 +8,8 @@ import time
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
 
+faceByak = False
+
 # Function to capture a screenshot of all screens
 def capture_all_screens():
     with mss.mss() as sct:
@@ -90,6 +92,51 @@ def locate_image(image_path, region=None,confidence=0.4):
         return False
     except Exception as e:
         return False
+    
+def handle_event(event_name, open_image, event_image):
+    print(f"Checking if {event_name} is open.")
+    is_open = locate_image(open_image, confidence=0.9)
+    if is_open:
+        print(f"{event_name} is open")
+        events = click_on_image(__file__.replace("script.py", "Events.png"), confidence=0.6)
+        if events:
+            print(f"Clicked on Events for {event_name}")
+            time.sleep(1)
+            event = click_on_image(event_image, confidence=0.8)
+            if event:
+                print(f"Clicked on {event_name}")
+                print("Waiting for 5 minutes before continuing...")
+                time.sleep(300)  # Wait for 5 minutes
+                return True
+            else:
+                print(f"{event_name} not found")
+        else:
+            print("Events not found")
+    else:
+        print(f"{event_name} not open")
+    return False
+
+def handle_event_started(event_name, started_image):
+    hasEventStarted = locate_image(started_image,region=None,confidence=0.8)
+    if hasEventStarted:
+        print(f"{event_name} has started")
+        return True
+        
+    else:
+        print(f"{event_name} has not started")
+        return False
+    
+def handle_event_ended(event_name, ended_image):
+    hasEventEnded= locate_image(ended_image,region=None,confidence=0.5)
+    if hasEventEnded:
+        print(f"{event_name} has ended")
+        return True
+        
+    else:
+        print(f"{event_name} has not ended")
+        return False
+
+
 
 def doRoutine():
     load = click_on_image(__file__.replace("script.py", "Load.png"))
@@ -97,139 +144,72 @@ def doRoutine():
         print("Character loaded")
     else:
         print("Failed to load. Text not found.")
-    
+
     time.sleep(5)
-    isByakOpen = locate_image(__file__.replace("script.py", "ByakOpen.png"),region=None,confidence=0.9)
-    if isByakOpen:
-        print("Byak is open")
-        events = click_on_image(__file__.replace("script.py", "Events.png"),region=None,confidence=0.6)
-        if events:
-            print("Clicked on Events")
-            time.sleep(1)
-            byak = click_on_image(__file__.replace("script.py", "Byak.png"),region=None,confidence=0.8)
-            if byak:
-                print("Clicked on Byak")
-            else:
-                print("Byak not found")
-        else:
-            print("Events not found")
-    else:
-        print("Byak not open")
-    isCTFOpen = locate_image(__file__.replace("script.py", "CTFOpen.png"),region=None,confidence=0.8)
-    if isCTFOpen:
-        print("CTF is open")
-        events = click_on_image(__file__.replace("script.py", "Events.png"),region=None,confidence=0.6)
-        if events:
-            print("Clicked on Events")
-            time.sleep(2)
-            ctf = click_on_image(__file__.replace("script.py", "CTF.png"),region=None,confidence=0.8)
-            if ctf:
-                print("Clicked on CTF")
-            else:
-                print("CTF not found")
-        else:
-            print("Events not found")
-    else:
-        print("CTF not open")
-    hasCTFStarted = locate_image(__file__.replace("script.py", "CTFStarted.png"),region=None,confidence=0.8)
-    if hasCTFStarted:
-        print("CTF has started")
-        commands = click_on_image(__file__.replace("script.py", "Commands.png"),region=None,confidence=0.6)
-        if commands:
-            print("Clicked on commands")
-            time.sleep(2)
-            suicide = click_on_image(__file__.replace("script.py", "Suicide.png"),region=None,confidence=0.6)
-            if suicide:
-                print("Clicked on Suicide")
-            else:
-                print("Suicide not found")
-        else:
-            print("Events not found")
-    else:
-        print("CTF not started")
 
-    isTDMOpen = locate_image(__file__.replace("script.py", "TDMOpen.png"),region=None,confidence=0.8)
-    if isTDMOpen:
-        print("TDM is open")
-        events = click_on_image(__file__.replace("script.py", "Events.png"),region=None,confidence=0.6)
-        if events:
-            print("Clicked on Events")
-            time.sleep(2)
-            tdm = click_on_image(__file__.replace("script.py", "TDM.png"),region=None,confidence=0.8)
-            if tdm:
-                print("Clicked on TDM")
-            else:
-                print("TDM not found")
-        else:
-            print("Events not found")
-    else:
-        print("TDM not open")
-
-    hasTDMStarted = locate_image(__file__.replace("script.py", "TDMStarted.png"),region=None,confidence=0.8)
-    if hasTDMStarted:
-        print("TDM has started")
-        hasSuicidedBefore = locate_image(__file__.replace("script.py", "LivesLeft.png"),region=None,confidence=0.8)
-        if not hasSuicidedBefore:
-            commands = click_on_image(__file__.replace("script.py", "Commands.png"),region=None,confidence=0.6)
-            if commands:
-                print("Clicked on commands")
-                time.sleep(2)
-                suicide = click_on_image(__file__.replace("script.py", "Suicide.png"),region=None,confidence=0.6)
-                if suicide:
-                    print("Clicked on Suicide")
-                else:
-                    print("Suicide not found")
-            else:
-                print("Events not found")
-        else:
-            print("Already suicided")
-    else:
-        print("TDM not started")
-
-    isKOTHOpen = locate_image(__file__.replace("script.py", "KOTHOpen.png"),region=None,confidence=0.8)
-    if isKOTHOpen:
-        print("KOTH is open")
-        events = click_on_image(__file__.replace("script.py", "Events.png"),region=None,confidence=0.6)
-        if events:
-            print("Clicked on Events")
-            time.sleep(2)
-            tdm = click_on_image(__file__.replace("script.py", "KOTH.png"),region=None,confidence=0.8)
-            if tdm:
-                print("Clicked on KOTH")
-            else:
-                print("KOTH not found")
-        else:
-            print("Events not found")
-    else:
-        print("KOTH not open")
-    
-    hasKOTHStarted = locate_image(__file__.replace("script.py", "KOTHStarted.png"),region=None,confidence=0.8)
-    if hasKOTHStarted:
-        print("KOTH has started")
-        commands = click_on_image(__file__.replace("script.py", "Commands.png"),region=None,confidence=0.6)
-        if commands:
-            print("Clicked on commands")
-            time.sleep(2)
-            suicide = click_on_image(__file__.replace("script.py", "Suicide.png"),region=None,confidence=0.6)
-            if suicide:
-                print("Clicked on Suicide")
-            else:
-                print("Suicide not found")
-        else:
-            print("Events not found")
-
-    else:
-        print("KOTH not started")
-    
-    
+    if handle_event("Byakuya", __file__.replace("script.py", "ByakOpen.png"), __file__.replace("script.py", "Byak.png")):
+        time.sleep(5)
+        if handle_event_started("Byakuya", __file__.replace("script.py", "ByakStarted.png")):
+            return
         
+    if handle_event("CTF", __file__.replace("script.py", "CTFOpen.png"), __file__.replace("script.py", "CTF.png")):
+        time.sleep(5)
+        if handle_event_started("CTF", __file__.replace("script.py", "CTFStarted.png")):
+            if suicide():
+                return
+            else:
+                time.sleep(5)
+                suicide()
+                return
+
+    if handle_event("TDM", __file__.replace("script.py", "TDMOpen.png"), __file__.replace("script.py", "TDM.png")):
+        time.sleep(5)
+        if handle_event_started("TDM", __file__.replace("script.py", "TDMStarted.png")):
+            if suicide():
+                time.sleep(20)
+                suicide()
+                time.sleep(20)
+                suicide()
+                return
+            else:
+                time.sleep(20)
+                suicide()
+                time.sleep(20)
+                suicide()
+                time.sleep(20)
+                suicide()
+                return
+    if  handle_event("KOTH", __file__.replace("script.py", "KOTHOpen.png"), __file__.replace("script.py", "KOTH.png")):
+        if handle_event_started("KOTH", __file__.replace("script.py", "KOTHStarted.png")):
+            if suicide():
+                return
+            else:
+                time.sleep(5)
+                suicide()
+                return
+    
+
+def suicide():
+    commands = click_on_image(__file__.replace("script.py", "Commands.png"),region=None,confidence=0.6)
+    if commands:
+        print("Clicked on commands")
+        time.sleep(2)
+        suicide = click_on_image(__file__.replace("script.py", "Suicide.png"),region=None,confidence=0.6)
+        if suicide:
+            print("Clicked on Suicide")
+            return True
+        else:
+            print("Suicide not found")
+            return False
+    else:
+        print("Commands not found")
+        return False
 
 
 if __name__ == "__main__":
     while True:
         # Locate and click the language selection image
         language = click_on_image(__file__.replace("script.py", "Image.png"),region=None,confidence=0.6)
-        print(__file__.replace("script.py", "Image.png"))
         if language:
             time.sleep(5)  # Wait for the popup to appear
             # Locate and click the "X" button in the popup

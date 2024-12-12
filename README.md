@@ -10,8 +10,8 @@
 
 ## INSTALLING TESSEACT
 
-`winget install Tesseract-OCR`
+- `winget install Tesseract-OCR`
 
 ## RUNNING THE SCRIPT
 
-`python script.py`
+- `python script.py`

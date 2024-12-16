@@ -166,17 +166,12 @@ def doRoutine():
         time.sleep(5)
         if handle_event_started("TDM", __file__.replace("script.py", "TDMStarted.png")):
             if suicide():
-                time.sleep(20)
                 suicide()
-                time.sleep(20)
                 suicide()
                 return
             else:
-                time.sleep(20)
                 suicide()
-                time.sleep(20)
                 suicide()
-                time.sleep(20)
                 suicide()
                 return
     if  handle_event("KOTH", __file__.replace("script.py", "KOTHOpen.png"), __file__.replace("script.py", "KOTH.png")):
